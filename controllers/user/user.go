@@ -58,7 +58,7 @@ func (c *UserController) Login(ctx *gin.Context) {
 		return
 	}
 
-	user, err := c.service.GetUser().Login(ctx, request)
+	user, err := c.service.GetUser().Login(ctx.Request.Context(), request)
 	if err != nil {
 		response.HTTPResp(response.ParamsHTTPResp{
 			Code: http.StatusBadRequest,
@@ -105,7 +105,7 @@ func (c *UserController) Register(ctx *gin.Context) {
 		return
 	}
 
-	user, err := c.service.GetUser().Register(ctx, request)
+	user, err := c.service.GetUser().Register(ctx.Request.Context(), request)
 	if err != nil {
 		response.HTTPResp(response.ParamsHTTPResp{
 			Code: http.StatusBadRequest,
