@@ -13,7 +13,7 @@ type IControllerRegistry interface {
 	GetUserController() controllers.IUserController
 }
 
-func NewController(service services.IServiceRegistry) IControllerRegistry {
+func NewControllerRegistry(service services.IServiceRegistry) IControllerRegistry {
 	return &Registry{
 		service: service,
 	}

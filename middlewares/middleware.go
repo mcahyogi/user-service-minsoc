@@ -74,9 +74,15 @@ func validateApiKey(c *gin.Context) error {
 
 	validateKey := fmt.Sprintf("%s:%s:%s", serviceName, signatureKey, requestAt)
 
+	// ⬇️ Tambah log ini sementara untuk debug
+	fmt.Printf("[DEBUG] validateKey raw : %q\n", validateKey)
+	fmt.Printf("[DEBUG] apiKey received : %q\n", apiKey)
+
 	hash := sha256.New()
 	hash.Write([]byte(validateKey))
 	resultHash := hex.EncodeToString(hash.Sum(nil))
+
+	fmt.Printf("[DEBUG] resultHash      : %q\n", resultHash) // ⬅️ bandingkan ini
 
 	if apiKey != resultHash {
 		return errConstants.ErrUnauthorized
@@ -117,7 +123,7 @@ func validateBearerToken(c *gin.Context, token string) error {
 }
 
 func Authenticate() gin.HandlerFunc {
-	// 1. cek dulu ada tokennya ga
+	// 1. cek dulu ada value pada header fe ga
 	// 2. kalau ada panggil validateBearerToken
 	// 3. kalau berhasil panggil validateApiKey
 
@@ -125,20 +131,24 @@ func Authenticate() gin.HandlerFunc {
 		var err error
 		token := c.GetHeader(constants.Authorization)
 		if token == "" {
+			fmt.Println("token empty")
 			responseUnauthorized(c, errConstants.ErrUnauthorized.Error())
 			return
 		}
 
 		err = validateBearerToken(c, token)
 		if err != nil {
+			fmt.Println("token empty 2")
 			responseUnauthorized(c, err.Error())
 			return
 		}
 
-		err = validateApiKey(c)
-		if err != nil {
-			responseUnauthorized(c, err.Error())
-			return
+		if config.Config.AppEnv != "local" {
+			err = validateApiKey(c)
+			if err != nil {
+				responseUnauthorized(c, err.Error())
+				return
+			}
 		}
 		c.Next()
 	}

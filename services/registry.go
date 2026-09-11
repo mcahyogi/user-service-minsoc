@@ -13,7 +13,7 @@ type IServiceRegistry interface {
 	GetUser() services.IUserService
 }
 
-func NewUserService(repository repositories.IRepositoryRegistry) IServiceRegistry {
+func NewServiceRegistry(repository repositories.IRepositoryRegistry) IServiceRegistry {
 	return &Registry{
 		Repository: repository,
 	}
