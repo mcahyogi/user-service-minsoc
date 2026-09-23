@@ -2,7 +2,7 @@
   "port": 8001,
   "appName": "user-service",
   "appEnv": "local",
-  "signatureKey": "hahahahahaha",
+  "signatureKey": "",
   "database": {
     "host": "localhost",
     "port": 5432,
